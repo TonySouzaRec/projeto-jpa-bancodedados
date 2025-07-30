@@ -113,6 +113,9 @@ Local: `src/main/resources/META-INF/persistence.xml`
 
             <!-- Mostrar SQL no console -->
             <property name="hibernate.show_sql" value="true"/>
+
+            <!-- Formatador -->
+            <property name="hibernate.format_sql" value="true" />
         </properties>
     </persistence-unit>
 </persistence>
