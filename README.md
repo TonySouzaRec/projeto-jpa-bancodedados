@@ -16,7 +16,7 @@ organizado em camadas (entity, util, service, app).
 - DBeaver (cliente SQL)
 
 ---
-
+```
 ## Estrutura do projeto
 src/main/java/br/com/bancodedadosfuctura/
 ├── entity/
@@ -30,7 +30,7 @@ src/main/java/br/com/bancodedadosfuctura/
 src/main/resources/
 └── META-INF/
 └── persistence.xml # Configuração JPA/Hibernate
-
+```
 ---
 
 ## Configuração do banco de dados
