@@ -1,144 +1,91 @@
-# 🧱 Projeto Base Java com Maven, JPA (Jakarta Persistence) e Hibernate
+# Projeto JPA — CRUD de Pessoa - Curso Fuctura Tecnologia – Java
 
-Este projeto base foi criado com o objetivo de ensinar os primeiros passos na construção de uma aplicação Java utilizando Maven, Jakarta Persistence (JPA) e Hibernate. Ele **ainda não possui entidades nem conexão com o banco**, mas já inclui a estrutura mínima de `pom.xml` e `persistence.xml`.
-
----
-
-## 📥 Como utilizar o projeto na sua IDE
-
-### Eclipse ou STS:
-1. Vá em `File > Import`.
-2. Selecione `Existing Maven Projects`.
-3. Navegue até a pasta do projeto e clique em `Finish`.
-
-### IntelliJ:
-1. Vá em `File > Open`.
-2. Selecione a pasta do projeto.
-3. O IntelliJ detectará automaticamente o projeto Maven.
+Projeto Java desenvolvido no módulo de Banco de Dados do curso da **Fuctura Tecnologia**.  
+Implementa um CRUD completo para a entidade `Pessoa` usando JPA/Hibernate com PostgreSQL,
+organizado em camadas (entity, util, service, app).
 
 ---
 
-## ⚙️ Estrutura inicial esperada
+## Tecnologias utilizadas
 
+- Java 21
+- Maven
+- Jakarta Persistence (JPA) 3.0
+- Hibernate ORM 6.5
+- PostgreSQL 17
+- DBeaver (cliente SQL)
+
+---
+
+## Estrutura do projeto
+src/main/java/br/com/bancodedadosfuctura/
+├── entity/
+│ └── Pessoa.java # Entidade mapeada para a tabela pessoa
+├── util/
+│ └── JpaUtil.java # EntityManagerFactory singleton
+├── service/
+│ └── PessoaService.java # CRUD com transações e tratamento de erros
+└── App.java # Menu interativo via console
+
+src/main/resources/
+└── META-INF/
+└── persistence.xml # Configuração JPA/Hibernate
+
+---
+
+## Configuração do banco de dados
+
+1. Instale o PostgreSQL e crie o banco:
+
+```sql
+CREATE DATABASE projetobancodedados;
 ```
-projeto-base/
-├── pom.xml
-└── src/
-    └── main/
-        ├── java/
-        └── resources/
-            └── META-INF/
-                └── persistence.xml
+
+2. Crie a tabela manualmente no DBeaver ou psql:
+
+```sql
+CREATE TABLE pessoa (
+    id    SERIAL        PRIMARY KEY,
+    nome  VARCHAR(255)  NOT NULL,
+    cpf   VARCHAR(11)   NOT NULL UNIQUE,
+    email VARCHAR(255)
+);
 ```
 
----
-
-## 📄 Arquivo `pom.xml` (explicado)
+3. Ajuste as credenciais em `persistence.xml`:
 
 ```xml
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <!-- Versão do modelo Maven -->
-    <modelVersion>4.0.0</modelVersion>
-
-    <!-- Grupo e artefato do projeto -->
-    <groupId>com.exemplo</groupId>
-    <artifactId>projeto-base</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
-    <!-- Configuração do Java -->
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-    </properties>
-
-    <dependencies>
-        <!-- API de persistência Jakarta -->
-        <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-
-        <!-- Implementação do Hibernate -->
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>6.5.2.Final</version>
-        </dependency>
-
-        <!-- Driver para PostgreSQL (pode ser substituído conforme o banco) -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.5.1</version>
-        </dependency>
-    </dependencies>
-</project>
+<property name="jakarta.persistence.jdbc.url"      value="jdbc:postgresql://localhost:5432/projetobancodedados" />
+<property name="jakarta.persistence.jdbc.user"     value="postgres" />
+<property name="jakarta.persistence.jdbc.password" value="SUA_SENHA" />
 ```
 
 ---
 
-## 📄 Arquivo `persistence.xml` (explicado)
+## Como executar
 
-Local: `src/main/resources/META-INF/persistence.xml`
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
-             version="3.0">
-
-    <!-- Nome da unidade de persistência -->
-    <persistence-unit name="exemploPU" transaction-type="RESOURCE_LOCAL">
-
-        <properties>
-            <!-- Driver do banco de dados -->
-            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-
-            <!-- URL de conexão -->
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/seubanco"/>
-
-            <!-- Usuário e senha -->
-            <property name="jakarta.persistence.jdbc.user" value="seuusuario"/>
-            <property name="jakarta.persistence.jdbc.password" value="123456"/>
-
-            <!-- Dialeto do Hibernate (específico para o banco usado) -->
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-
-            <!-- Geração automática de tabelas -->
-            <property name="hibernate.hbm2ddl.auto" value="none"/>
-
-            <!-- Mostrar SQL no console -->
-            <property name="hibernate.show_sql" value="true"/>
-
-            <!-- Formatador -->
-            <property name="hibernate.format_sql" value="true" />
-        </properties>
-    </persistence-unit>
-</persistence>
-```
+1. Clone o repositório
+2. Importe como projeto Maven no Eclipse
+3. Certifique-se que o PostgreSQL está rodando e a tabela `pessoa` foi criada
+4. Execute a classe `App.java`
+5. Use o menu interativo para testar o CRUD
 
 ---
 
-## 🔄 Adaptando para outros bancos de dados
+## Funcionalidades
 
-| Banco        | Driver JDBC                          | Dialeto Hibernate                                |
-|--------------|--------------------------------------|--------------------------------------------------|
-| PostgreSQL   | `org.postgresql.Driver`              | `org.hibernate.dialect.PostgreSQLDialect`       |
-| MySQL        | `com.mysql.cj.jdbc.Driver`           | `org.hibernate.dialect.MySQLDialect`            |
-| H2 (teste)   | `org.h2.Driver`                      | `org.hibernate.dialect.H2Dialect`               |
-| SQL Server   | `com.microsoft.sqlserver.jdbc.SQLServerDriver` | `org.hibernate.dialect.SQLServerDialect` |
-
-> Basta trocar as propriedades no `persistence.xml`.
+| Opção | Operação |
+|-------|----------|
+| 1 | Criar pessoa |
+| 2 | Buscar por ID |
+| 3 | Listar todos |
+| 4 | Editar pessoa |
+| 5 | Excluir pessoa (com confirmação) |
+| 6 | Povoar banco com dados de teste |
+| 0 | Sair |
 
 ---
 
-## ✅ Próximos passos
-
-- Criar as entidades Java (`@Entity`)
-- Criar o `EntityManager` e iniciar testes de persistência
-- Conectar ao banco de dados configurado
-
+## Autor
+`Tony Souza`
+Desenvolvido como projeto prático do curso **Java + Banco de Dados — Fuctura Tecnologia**.
